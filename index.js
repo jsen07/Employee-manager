@@ -1,5 +1,5 @@
 const inquirer = require('inquirer');
-
+const promptHandler = require('./promptHandler.js');
 
 const questions = [
     {
@@ -11,7 +11,9 @@ const questions = [
 ]
 
 function init() {
-    inquirer.prompt(questions);
+    inquirer.prompt(questions).then(function(data) {
+        promptHandler(data);
+    });
 };
 
 module.exports = { init };
