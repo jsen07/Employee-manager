@@ -1,5 +1,4 @@
 const mysql = require('mysql2');
-const { init } = require('../index.js');
 
 
 const db = mysql.createConnection(
@@ -12,4 +11,4 @@ const db = mysql.createConnection(
     console.log(`Connected to the employees database.`)
   );
 
-  init();
+  module.exports = db;
