@@ -25,9 +25,14 @@ function addDepartment(db, data) {
     db.query('INSERT into department (department_name) VALUES (?)', data);
 }
 
+function addRole(db, data) {
+    db.query(`INSERT into employee_role (title, salary, department_id) VALUES (?, ?, (SELECT id FROM department WHERE department_name = ?))`, [data.roleName, data.roleSalary, data.roleDepartment]);
+}
+
 module.exports = {
     viewAllDepartment,
     viewAllRoles,
     viewAllEmployee,
-    addDepartment 
+    addDepartment,
+    addRole 
 };

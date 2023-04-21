@@ -1,6 +1,6 @@
 const inquirer = require('inquirer');
 const db = require('./db/connection.js');
-const { viewAllDepartment, viewAllRoles, viewAllEmployee, addDepartment } = require('./db/queryHandler.js');
+const { viewAllDepartment, viewAllRoles, viewAllEmployee, addDepartment, addRole } = require('./db/queryHandler.js');
 const questions = [
     {
         type: "list",
@@ -37,10 +37,28 @@ function promptHandler(data) {
                 viewAllDepartment(db, init);
             });     
             break;
-    }
-
-
-}
+            case 'Add a role':
+                inquirer.prompt([{
+                    type: 'input',
+                    message: 'What is the title of the role?',
+                    name: 'roleName'
+                },
+                {
+                    type: 'input',
+                    message: 'What is the salary of the role?',
+                    name: 'roleSalary'
+                },
+                {
+                    type: 'input',
+                    message: 'What department does this role belong in?',
+                    name: 'roleDepartment'
+                }]).then(function (data) {
+                    addRole(db, data);
+                    viewAllRoles(db, init);
+                })
+                break;
+            }
+        }
 function init() {
     inquirer.prompt(questions).then(function(data) {
         promptHandler(data);
