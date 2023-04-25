@@ -2,7 +2,9 @@
 
 ## Project Description
 
+To build a command-line application to manage a company's employee database, using Node.js, Inquirer, and MySQL. The user will be able to view data in the database as well as add new roles, departments and update employee information  in the database.
 
+IMPORTANT
 
 ## User Story
 
@@ -59,7 +61,6 @@ Start the application
 node index
 
 ```
-After the application has been fully initialised 
 
 ## Application
 
