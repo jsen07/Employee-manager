@@ -1,6 +1,6 @@
 const inquirer = require('inquirer');
 const db = require('./db/connection.js');
-const { viewAllDepartment, viewAllRoles, viewAllEmployee, addDepartment, addRole } = require('./db/queryHandler.js');
+const { viewAllDepartment, viewAllRoles, viewAllEmployee, addDepartment, addRole, viewEmployees, viewRoles, addEmployee, updateEmployee } = require('./db/queryHandler.js');
 const questions = [
     {
         type: "list",
@@ -12,10 +12,10 @@ const questions = [
 
 db.connect((erorr) => {
         init();
+        viewEmployees(db);
 });
 
 function promptHandler(data) {
-
     switch(data.option) {
         case 'View all departments':
             viewAllDepartment(db, init);
@@ -50,13 +50,60 @@ function promptHandler(data) {
                 },
                 {
                     type: 'input',
-                    message: 'What department does this role belong in?',
+                    message: 'What department does this role belong to?',
                     name: 'roleDepartment'
                 }]).then(function (data) {
                     addRole(db, data);
                     viewAllRoles(db, init);
                 })
                 break;
+                case 'Add an employee':
+                    
+                    inquirer.prompt([{
+                        type: 'input',
+                        message: 'What is the first name of the employee?',
+                        name: 'first'
+                    },
+                    {
+                        type: 'input',
+                        message: 'What is the last name of the employee?',
+                        name: 'last'
+                    },
+                    {
+                        type: 'list',
+                        message: 'What is the role of the employee?',
+                        name: 'employeeRole',
+                        choices: viewRoles(db)
+                    },
+                    {
+                        type: 'list',
+                        message: 'Who is the manager of the employee?',
+                        name: 'employeeManager',
+                        choices: viewEmployees(db)
+                    }]).then(function (data) {
+                        addEmployee(db, data, init)
+                    })
+                    
+                    break;                                           case 'Update an employee role':
+                    
+                    inquirer.prompt([{
+                        type: 'list',
+                        message: 'What is the name you would like to update?',
+                        name: 'name',
+                        choices: viewAllEmployee(db, init)
+                    },
+                    {
+                        type: 'input',
+                        message: 'Which role do you want to assign the selected employee?',
+                        name: 'newRole',
+                        choices: viewAllRoles(db, init)
+                    }]).then(function (data) {
+                        updateEmployee(db, data); 
+                       
+              
+                    })
+                    break;             
+
             }
         }
 function init() {
