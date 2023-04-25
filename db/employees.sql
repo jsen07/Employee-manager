@@ -2,7 +2,7 @@ DROP DATABASE IF EXISTS employees;
 CREATE DATABASE employees;
 
 USE employees;
-
+-- INITIALIZE DATABASE
 CREATE TABLE department (
   id INT AUTO_INCREMENT PRIMARY KEY,
   department_name VARCHAR(30) NOT NULL

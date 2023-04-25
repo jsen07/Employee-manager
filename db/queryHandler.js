@@ -1,34 +1,38 @@
 
-
+// VIEW ALL DEPARTMENTS IN DATABASE
 function viewAllDepartment(db, init) {
     db.query('Select * from department', function (err, results) {
         console.table(results);  
         init();
     });
 }
-
+// VIEW ALL ROLES IN DATABASE
 function viewAllRoles(db, init) {
     db.query('Select * from employee_role', function (err, results) {
         console.table(results);  
         init();
     });
 }
-
+//VIEW ALL EMPLOYEES IN DATABASE
 function viewAllEmployee(db, init) {
     db.query('Select * from employee', function (err, results) {
         console.table(results);  
         init();
     });
 }
-
-function addDepartment(db, data) {
+// ADD DEPARTMENT
+function addDepartment(db, data, init) {
     db.query('INSERT into department (department_name) VALUES (?)', data);
+    init();
 }
-
-function addRole(db, data) {
+// ADD ROLE
+function addRole(db, data, init) {
     db.query(`INSERT into employee_role (title, salary, department_id) VALUES (?, ?, (SELECT id FROM department WHERE department_name = ?))`, [data.roleName, data.roleSalary, data.roleDepartment]);
+
+    init();
 }
 
+// ADD EMPLOYEE
 function addEmployee(db, data, init) {
     let roleID =[];
     db.query('SELECT id from employee_role WHERE title = ?', [data.employeeRole], function(err, results) {
@@ -37,7 +41,6 @@ function addEmployee(db, data, init) {
  
         db.query('SELECT * FROM employee', function(err, results) {
             let arr = [];
-            // let fulln = data.employeeManager.split(' ');
             for(let i = 0; i < results.length; i++) {
                 let fullname = results[i].first_name + ' ' + results[i].last_name;
                 if(fullname == data.employeeManager && data.employeeManager != 'No manager') {
@@ -70,10 +73,11 @@ function addEmployee(db, data, init) {
     init();
 }
 
-
+// EMPLOYEE CHOICES FOR PROMPT
 function viewEmployees(db){
     let employees = [];
     db.query('Select first_name, last_name from employee', function (err, results) {
+
         for (i = 0; i < results.length; i++) {
             employees.push(results[i].first_name + " " + results[i].last_name);
         }  
@@ -82,6 +86,18 @@ function viewEmployees(db){
     return employees;
 }
 
+// DEPARTMENT CHOICES FOR PROMPT
+function viewDepartment(db) {
+    let dp = [];
+    db.query('Select department_name from department', function (err, results) {
+        for (i = 0; i < results.length; i++) {
+            dp.push(results[i].department_name);
+        }  
+    });
+    return dp;
+}
+
+// ROLE CHOICES FOR PROMPT
 function viewRoles(db){
     let roles = [];
     db.query('Select title from employee_role', function (err, results) {
@@ -92,6 +108,7 @@ function viewRoles(db){
     return roles;
 }
 
+// UPDATE AN EMPLOYEE ROLE 
 function updateEmployee(db, data, init) {
     let roleID = [];
     db.query('SELECT * FROM employee_role', function (err, results) {
@@ -114,11 +131,14 @@ function updateEmployee(db, data, init) {
         
 init();
         }
+
+//EXPORT FUNCTIONS
 module.exports = {
     viewAllDepartment,
     viewAllRoles,
     viewAllEmployee,
     addDepartment,
+    viewDepartment,
     addRole,
     viewEmployees,
     viewRoles,

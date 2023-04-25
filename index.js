@@ -1,6 +1,8 @@
 const inquirer = require('inquirer');
 const db = require('./db/connection.js');
-const { viewAllDepartment, viewAllRoles, viewAllEmployee, addDepartment, addRole, viewEmployees, viewRoles, addEmployee, updateEmployee } = require('./db/queryHandler.js');
+const { viewAllDepartment, viewAllRoles, viewAllEmployee, addDepartment, viewDepartment, addRole, viewEmployees, viewRoles, addEmployee, updateEmployee } = require('./db/queryHandler.js');
+
+// SET QUESTIONS
 const questions = [
     {
         type: "list",
@@ -12,9 +14,9 @@ const questions = [
 
 db.connect((erorr) => {
         init();
-        viewEmployees(db);
 });
 
+// HANDLE USER COMMANDS
 function promptHandler(data) {
     switch(data.option) {
         case 'View all departments':
@@ -33,8 +35,7 @@ function promptHandler(data) {
                 name: 'dpName'
             }).then(function (data) {
                 let department = data.dpName;
-                addDepartment(db, department);
-                viewAllDepartment(db, init);
+                addDepartment(db, department, init);
             });     
             break;
             case 'Add a role':
@@ -49,12 +50,12 @@ function promptHandler(data) {
                     name: 'roleSalary'
                 },
                 {
-                    type: 'input',
+                    type: 'list',
                     message: 'What department does this role belong to?',
-                    name: 'roleDepartment'
+                    name: 'roleDepartment',
+                    choices: viewDepartment(db)
                 }]).then(function (data) {
-                    addRole(db, data);
-                    viewAllRoles(db, init);
+                    addRole(db, data, init);
                 }); 
                 break;
                 case 'Add an employee':
@@ -112,6 +113,7 @@ function promptHandler(data) {
 
             }
         }
+//START APP
 function init() {
     inquirer.prompt(questions).then(function(data) {
         promptHandler(data);

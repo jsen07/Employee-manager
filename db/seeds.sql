@@ -1,3 +1,4 @@
+-- POPULATE DATABASE
 INSERT INTO department (department_name) VALUES 
 ("University of Birmingham"),
 ("Bootcamp"),
@@ -5,9 +6,9 @@ INSERT INTO department (department_name) VALUES
 
 
 INSERT INTO employee_role (title, salary, department_id) VALUES
-('Head', 15.00, 1),
-('Teacher', 15.00, 2),
-('Student', 0.00, 3);
+('Head', 15000, 1),
+('Teacher', 15000, 2),
+('Student', 0.000, 3);
 
 INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES
 ('Thembiswa', 'Zwane', 1, NULL),
