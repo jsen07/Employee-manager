@@ -55,10 +55,9 @@ function promptHandler(data) {
                 }]).then(function (data) {
                     addRole(db, data);
                     viewAllRoles(db, init);
-                })
+                }); 
                 break;
                 case 'Add an employee':
-                    
                     inquirer.prompt([{
                         type: 'input',
                         message: 'What is the first name of the employee?',
@@ -81,27 +80,34 @@ function promptHandler(data) {
                         name: 'employeeManager',
                         choices: viewEmployees(db)
                     }]).then(function (data) {
-                        addEmployee(db, data, init)
-                    })
-                    
-                    break;                                           case 'Update an employee role':
-                    
-                    inquirer.prompt([{
-                        type: 'list',
+                        addEmployee(db, data, init);
+                    });
+                    break;                                      
+                    case 'Update an employee role':
+                        let eArr = [];
+                        db.query('SELECT * FROM employee', function (err, results) {
+                        for(let i = 0; i < results.length; i++) {
+                        eArr.push(results[i].first_name + ' ' + results[i].last_name);
+                        }
+                        
+                        
+                    inquirer.prompt([
+                    {
+                        type: 'list', 
                         message: 'What is the name you would like to update?',
                         name: 'name',
-                        choices: viewAllEmployee(db, init)
+                        choices: eArr
                     },
                     {
-                        type: 'input',
+                        type: 'list',
                         message: 'Which role do you want to assign the selected employee?',
                         name: 'newRole',
-                        choices: viewAllRoles(db, init)
+                        choices: viewRoles(db)
                     }]).then(function (data) {
-                        updateEmployee(db, data); 
-                       
+                        updateEmployee(db, data, init); 
               
                     })
+                })
                     break;             
 
             }

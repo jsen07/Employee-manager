@@ -81,6 +81,7 @@ function viewEmployees(db){
     });
     return employees;
 }
+
 function viewRoles(db){
     let roles = [];
     db.query('Select title from employee_role', function (err, results) {
@@ -91,18 +92,28 @@ function viewRoles(db){
     return roles;
 }
 
-function updateEmployee(db, data) {
-
-    db.query('SELECT * FROM emplpoyee', function(err, results) {
+function updateEmployee(db, data, init) {
+    let roleID = [];
+    db.query('SELECT * FROM employee_role', function (err, results) {
         for(let i = 0; i < results.length; i++) {
-            if(results[i].first_name + ' ' + results[i].lastname === data.name) {
-
+            if(data.newRole === results[i].title) {
+                roleID.push(results[i].id)
             }
         }
     })
+    
+    db.query('SELECT * FROM employee', function (err, results) {
+        for(let i = 1; i < results.length; i++) {
+            let fullname = results[i].first_name + ' ' + results[i].last_name
+            if(fullname === data.name) {
+                db.query("UPDATE employee SET role_id = ? WHERE first_name = ? AND last_name = ?", [roleID[0], results[i].first_name, results[i].last_name]) 
+                }
+            }
 
-    db.query("UPDATE employee SET role_id = ? WHERE first_name = ? AND last_name = ?", data.newRole,  )
-}
+            })
+        
+init();
+        }
 module.exports = {
     viewAllDepartment,
     viewAllRoles,
